@@ -45,6 +45,13 @@ as.community.matrix <- function(x){
   y
 }
 
+#' @rdname as.community
+#' @export
+as.community.data.frame <- function(x){
+  as.community(as.matrix(x))
+}
+
+
 
 #' @rdname as.community
 #' @export

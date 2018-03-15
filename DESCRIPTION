@@ -7,7 +7,7 @@ Author: Klaus Schliep <klaus.schliep@gmail.com>,
 Maintainer: Klaus Schliep <klaus.schliep@gmail.com>
 Description: It delineates regions into geographic units
 Depends: Rcpp, phangorn, ape
-Imports: Matrix
+Imports: Matrix, fastmatch
 License: AGPL-3
 Encoding: UTF-8
 RoxygenNote: 6.0.1

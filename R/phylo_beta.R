@@ -7,7 +7,6 @@
 #  betapart indices Jaccard, Simpson, etc.
 #
 
-
 phylo_com <- function(tip, phy){
     if (!inherits(phy, "phylo"))
         stop("object \"phy\" is not of class \"phylo\"")
@@ -99,10 +98,13 @@ phylo_betapart_core <- function(x){
   SHARED <- vector("numeric", l*(l-1)/2)
   B <- vector("numeric", l*(l-1)/2)
   C <- vector("numeric", l*(l-1)/2)
+
   k <- 1
   for(i in 1:(l-1)){
+    xi <- x[[i]]
     for(j in (i+1):l){
-      SHARED[k] <- sum(el[intersect(x[[i]], x[[j]])])
+      #   sum(el[fast_intersect(x[[i]], x[[j]])])
+      SHARED[k] <- sum(el[xi[fmatch(x[[j]], xi, 0L)] ])
       B[k] <- pd_tmp[i] - SHARED[k]
       C[k] <- pd_tmp[j] - SHARED[k]
       k <- k+1
@@ -124,8 +126,6 @@ phylo_betapart_core <- function(x){
   class(res) <- "phylo.betapart"
   res
 }
-
-
 
 # based on picante needs improvement
 match.phylo.comm <- function (phy, comm, trace=1)
