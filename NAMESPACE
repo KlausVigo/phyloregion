@@ -2,5 +2,7 @@
 
 S3method(as.community,matrix)
 export(as.community)
+export(pd)
+export(phylo_community)
 export(phylo_maker)
 export(read.community)

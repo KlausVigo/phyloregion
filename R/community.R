@@ -52,9 +52,8 @@ read.community <- function(file, ...){
   d <- read.csv(file, ...)
 #  M <- sparseMatrix(as.integer(d[,"grids"]), as.integer(d[,"species"]),
 #                    dimnames = list(levels(d[,"grids"]), levels(d[,"species"])))
-  M <- sparseMatrix(as.integer(d[,"species"]), as.integer(d[,"grids"]),
+  M <- Matrix::sparseMatrix(as.integer(d[,"species"]), as.integer(d[,"grids"]),
                     dimnames = list(levels(d[,"species"]), levels(d[,"grids"])))
-  browser()
   res <- vector("list", ncol(M))
   for(i in seq_len(ncol(M))){
     res[[i]] <- M@i[(M@p[i]+1) : (M@p[i+1])] + 1

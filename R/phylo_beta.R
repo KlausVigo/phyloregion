@@ -8,22 +8,7 @@
 #
 
 
-
-phylo_com_C <- function(phy, tip){
-  if (!inherits(phy, "phylo"))
-    stop("object \"phy\" is not of class \"phylo\"")
-  Ntips <- length(phy$tip.label)
-  Nnodes <- phy$Nnode
-  rootnd <- Ntips +1L #getRoot(phy)
-  if (is.character(tip)) tip <- match(tip, c(phy$tip.label, phy$node.label))
-  tip <- as.integer(tip)
-  pvec <- integer(max(phy$edge))
-  pvec[phy$edge[, 2]] <- phy$edge[, 1]
-  res <- phylo_com_Rcpp(tip, pvec, Ntips, Nnodes, rootnd)
-  res
-}
-
-phylo_com <- function(phy, tip){
+phylo_com <- function(tip, phy){
     if (!inherits(phy, "phylo"))
         stop("object \"phy\" is not of class \"phylo\"")
     Ntips <- length(phy$tip.label)
@@ -53,22 +38,55 @@ phylo_com <- function(phy, tip){
     sort(res[1:l])
 }
 
-
-# phylogenetic diversity
-pd <- function(x, tree){
-  el <- numeric(max(tree$edge))
-  el[tree$edge[,2]] <- tree$edge.length
-#  fun <- function(x, tree){
-#    el <- numeric(max(tree$edge))
-#    el[tree$edge[,2]] <- tree$edge.length
-#    el[x]
-#  }
-  if(is.list(x)) lapply(x, function(x, el)el[x], el)
-  el[x] #fun(x, tree)
+#' Phylogenetic community objects
+#'
+#' read.community reads in file containing occurence data and returns a sparse
+#' matrix.
+#'
+#' If species is not in the tip label species is added to the genus or family
+#' level when possible
+#'
+#' @aliases read.community as.community as.community.matrix print.community
+#' @param splist Species list
+#' @param tree a phylogenetic tree (object of class phylo)
+#' @param nodes node list
+#' @param output.splist return species list
+#' @keywords cluster
+#' @examples
+#' example(as.community)
+#' pc <- phylo_community(com, tree)
+#' pd(pc)
+#'
+#' @rdname phylo_community
+#' @export
+phylo_community <- function(x, phy){
+  el <- numeric(max(phy$edge))
+  el[phy$edge[,2]] <- phy$edge.length
+  if(is.character(x) | is.numeric(x))  y <- phylo_com(x, phy)
+  if(is.list(x)){
+    y <- lapply(x, function(x, phy)phylo_com(x, phy), phy)
+  }
+  if(is.null(y)) return(NULL)
+  attr(y, "edge.length") <- el
+  y
 }
 
 
+#' @rdname phylo_community
+#' @export
+pd <- function(x, tree=NULL){
+  if(!is.null(tree)){
+    el <- numeric(max(tree$edge))
+    el[tree$edge[,2]] <- tree$edge.length
+  }
+  else el <- attr(x, "edge.length")
+  if(is.list(x)) res <- sapply(x, function(x, el)sum(el[x]), el)
+  else res <- sum(el[x]) #fun(x, tree)
+  res
+}
 
+
+# based on picante needs improvement
 match.phylo.comm <- function (phy, comm, trace=1)
 {
   if (!(is.data.frame(comm) | is.matrix(comm) | inherits(comm, "Matrix") )) {
@@ -129,5 +147,19 @@ cppFunction("IntegerVector phylo_com_Rcpp(IntegerVector tip, IntegerVector pvec,
             return result;
             }")
 
+
+phylo_com_C <- function(phy, tip){
+  if (!inherits(phy, "phylo"))
+    stop("object \"phy\" is not of class \"phylo\"")
+  Ntips <- length(phy$tip.label)
+  Nnodes <- phy$Nnode
+  rootnd <- Ntips +1L #getRoot(phy)
+  if (is.character(tip)) tip <- match(tip, c(phy$tip.label, phy$node.label))
+  tip <- as.integer(tip)
+  pvec <- integer(max(phy$edge))
+  pvec[phy$edge[, 2]] <- phy$edge[, 1]
+  res <- phylo_com_Rcpp(tip, pvec, Ntips, Nnodes, rootnd)
+  res
+}
 
 
