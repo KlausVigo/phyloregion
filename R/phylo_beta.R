@@ -62,12 +62,14 @@ phylo_com <- function(tip, phy){
 phylo_community <- function(x, phy){
   el <- numeric(max(phy$edge))
   el[phy$edge[,2]] <- phy$edge.length
-  if(is.character(x) | is.numeric(x))  y <- phylo_com(x, phy)
+  if(is.character(x) | is.numeric(x))  y <- list(phylo_com(x, phy))
   if(is.list(x)){
     y <- lapply(x, function(x, phy)phylo_com(x, phy), phy)
   }
   if(is.null(y)) return(NULL)
   attr(y, "edge.length") <- el
+  attr(y, "labels") <- c(phy$tip.label, as.character(Ntip(phy) + (1:Nnode(phy))))
+  class(y) <- c("phylo_community", "splits")
   y
 }
 
@@ -84,6 +86,45 @@ pd <- function(x, tree=NULL){
   else res <- sum(el[x]) #fun(x, tree)
   res
 }
+
+
+#' @rdname phylo_community
+#' @export
+phylo_betapart_core <- function(x){
+  l <- length(x)
+  pd_tmp <- pd(x)
+  el <- attr(x, "edge.length")
+  Labels <- names(x)
+  class(x) <- NULL
+  SHARED <- vector("numeric", l*(l-1)/2)
+  B <- vector("numeric", l*(l-1)/2)
+  C <- vector("numeric", l*(l-1)/2)
+  k <- 1
+  for(i in 1:(l-1)){
+    for(j in (i+1):l){
+      SHARED[k] <- sum(el[intersect(x[[i]], x[[j]])])
+      B[k] <- pd_tmp[i] - SHARED[k]
+      C[k] <- pd_tmp[j] - SHARED[k]
+      k <- k+1
+    }
+  }
+
+  sum.not.shared <- B+C
+  max.not.shared <- pmax(B,C)
+  min.not.shared <- pmin(B,C)
+
+  at <- structure(list(Labels=Labels, Size = l, class = "dist", Diag = FALSE,
+                       Upper = FALSE), .Names = c("Labels", "Size", "class", "Diag", "Upper"))
+  attributes(SHARED) <- at
+  attributes(sum.not.shared) <- at
+  attributes(max.not.shared) <- at
+  attributes(min.not.shared) <- at
+  res <- list(sumSi=sum(pd_tmp), St=sum(el), shared=SHARED, sum.not.shared = sum.not.shared,
+              max.not.shared=max.not.shared, min.not.shared=min.not.shared)
+  class(res) <- "phylo.betapart"
+  res
+}
+
 
 
 # based on picante needs improvement
