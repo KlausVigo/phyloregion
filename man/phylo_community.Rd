@@ -20,12 +20,9 @@ phylo_betapart_core(x)
 \item{phy}{a phylogenetic tree (object of class phylo)}
 }
 \description{
-read.community reads in file containing occurence data and returns a sparse
-matrix.
-}
-\details{
-If species is not in the tip label species is added to the genus or family
-level when possible
+phylo_community converts a community matrix and a tree in phylogenetic
+community matrix. This objects allows for efficient computation of
+phylogenetic diversity (pd) and beta diversity indices (phylo_betapart_core).
 }
 \examples{
 tree <- read.tree(text ="((t1:1,t2:1)N2:1,(t3:1,t4:1)N3:1)N1;")
@@ -41,5 +38,8 @@ library(betapart)
 phylo.beta.multi(pbc)
 phylo.beta.pair(pbc)
 
+}
+\seealso{
+read.community
 }
 \keyword{cluster}
