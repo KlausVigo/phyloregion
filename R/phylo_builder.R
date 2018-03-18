@@ -9,9 +9,10 @@
 #' @param tree a phylogenetic tree (object of class phylo)
 #' @param output.species_list return species list
 #' @keywords cluster
+#' @importFrom ape drop.tip stripLabel label2table getMRCA
+#' @importFrom parallel mclapply
 #' @export
-phylo_builder <- function (species, tree, output.species_list = TRUE,
-                           level = c("family", "genus", "species"))
+phylo_builder <- function (species, tree, output.species_list = TRUE)
 {
   taxonomy <- c("species", "genus", "family")
 #  ,"suborder", "order", "class", "phylum", "kingdom")

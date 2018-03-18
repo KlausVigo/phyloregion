@@ -1,5 +1,5 @@
-#'@importFrom betapart phylo.beta.multi
-#'@importFrom betapart phylo.beta.pair
+# @importFrom betapart phylo.beta.multi
+# @importFrom betapart phylo.beta.pair
 
 #
 # occurence --> phylogenetic occurence --> phylo beta
@@ -91,10 +91,10 @@ phylo_community <- function(x, phy){
 
 #' @rdname phylo_community
 #' @export
-pd <- function(x, tree=NULL){
-  if(!is.null(tree)){
-    el <- numeric(max(tree$edge))
-    el[tree$edge[,2]] <- tree$edge.length
+pd <- function(x, phy=NULL){
+  if(!is.null(phy)){
+    el <- numeric(max(phy$edge))
+    el[phy$edge[,2]] <- phy$edge.length
   }
   else el <- attr(x, "edge.length")
   if(is.list(x)) res <- sapply(x, function(x, el)sum(el[x]), el)

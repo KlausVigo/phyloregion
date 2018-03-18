@@ -4,8 +4,7 @@
 \alias{phylo_builder}
 \title{Create a subtree with largest overlap from a species list.}
 \usage{
-phylo_builder(species, tree, output.species_list = TRUE, level = c("family",
-  "genus", "species"))
+phylo_builder(species, tree, output.species_list = TRUE)
 }
 \arguments{
 \item{tree}{a phylogenetic tree (object of class phylo)}

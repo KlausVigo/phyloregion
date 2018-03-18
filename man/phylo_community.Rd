@@ -10,7 +10,7 @@
 \usage{
 phylo_community(x, phy)
 
-pd(x, tree = NULL)
+pd(x, phy = NULL)
 
 phylo_betapart_core(x)
 }
