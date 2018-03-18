@@ -6,12 +6,15 @@
 \alias{as.community.matrix}
 \alias{print.community}
 \alias{as.community.matrix}
+\alias{as.community.data.frame}
 \alias{read.community}
 \title{Sparse community matrices}
 \usage{
 as.community(x, ...)
 
-\method{as.community}{matrix}(x)
+as.community.matrix(x)
+
+as.community.data.frame(x)
 
 read.community(file, ...)
 }

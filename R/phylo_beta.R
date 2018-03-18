@@ -61,6 +61,9 @@ phylo_com <- function(tip, phy){
 phylo_community <- function(x, phy){
   el <- numeric(max(phy$edge))
   el[phy$edge[,2]] <- phy$edge.length
+  if(is.matrix(x) | is(x, "sparseMatrix")){
+    x <- as.community(x)
+  }
   if(is.character(x) | is.numeric(x))  y <- list(phylo_com(x, phy))
   if(is.list(x)){
     y <- lapply(x, function(x, phy)phylo_com(x, phy), phy)

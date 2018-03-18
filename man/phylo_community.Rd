@@ -7,11 +7,14 @@
 \alias{as.community.matrix}
 \alias{print.community}
 \alias{pd}
+\alias{phylo_betapart_core}
 \title{Phylogenetic community objects}
 \usage{
 phylo_community(x, phy)
 
 pd(x, tree = NULL)
+
+phylo_betapart_core(x)
 }
 \arguments{
 \item{tree}{a phylogenetic tree (object of class phylo)}

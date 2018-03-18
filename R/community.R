@@ -57,19 +57,40 @@ as.community.data.frame <- function(x){
 #' @export
 read.community <- function(file, ...){
   d <- read.csv(file, ...)
+  M <- Matrix::sparseMatrix(as.integer(d[,"grids"]), as.integer(d[,"species"]),
+                            dimnames = list(levels(d[,"grids"]), levels(d[,"species"])))
+  M
+}
+
+
+
+as.community <- function(x, ...){
+#  d <- read.csv(file, ...)
 #  M <- sparseMatrix(as.integer(d[,"grids"]), as.integer(d[,"species"]),
 #                    dimnames = list(levels(d[,"grids"]), levels(d[,"species"])))
-  M <- Matrix::sparseMatrix(as.integer(d[,"species"]), as.integer(d[,"grids"]),
-                    dimnames = list(levels(d[,"species"]), levels(d[,"grids"])))
+#  M <- Matrix::sparseMatrix(as.integer(d[,"species"]), as.integer(d[,"grids"]),
+#                    dimnames = list(levels(d[,"species"]), levels(d[,"grids"])))
+  if(is.matrix(x)) x <- Matrix:::Matrix(x, sparse=TRUE, doDiag = FALSE)
+  M <- t(x)
   res <- vector("list", ncol(M))
   for(i in seq_len(ncol(M))){
     res[[i]] <- M@i[(M@p[i]+1) : (M@p[i+1])] + 1
   }
-  names(res) <- levels(d[,"grids"])
-  attr(res, "labels") <- levels(d[,"species"])
+#  names(res) <- levels(d[,"grids"])
+#  attr(res, "labels") <- levels(d[,"species"])
+  names(res) <- colnames(M)
+  attr(res, "labels") <- row.names(M)
   class(res) <- c("community", "splits")
   res
 }
+
+
+#read.community <- function(file, ...){
+#  d <- read.csv(file, ...)
+#  M <- Matrix::sparseMatrix(as.integer(d[,"grids"]), as.integer(d[,"species"]),
+#                    dimnames = list(levels(d[,"grids"]), levels(d[,"species"])))
+#  M
+#}
 
 
 as.phylo_community <- function(tree, x){

@@ -76,9 +76,6 @@ phylo_builder <- function (species, tree, output.species_list = TRUE,
       res
     }
 
-#    nn_unique <- lapply(paste0(unique_genera, "_"), grep,
-#                 T1$tip.label, fixed=TRUE)
-
     nn_unique <- fun(unique_genera, tree_genera)
     ll_unique <- lengths(nn_unique)
 
@@ -109,9 +106,7 @@ phylo_builder <- function (species, tree, output.species_list = TRUE,
       fun2 <- function(x, tree) ifelse(length(x)>1, getMRCA(tree, x), 0)
 #      num <- mclapply(nn[ll>1],  function(x, tree)getMRCA(tree, x) , tree=T1)
       num <- mclapply(nn_unique,  fun2 , tree=T1)
-
       num <- (unlist(num)[tmp])[ll > 1]
-#browser()
       where2add <- c(where2add, unlist(num))
 #        num <- getMRCA(T1, T1$tip.label[ nn[[i]] ])
 #        T1 <- add.tips(T1, species_list$species[ add_tip[i] ], where = num)
