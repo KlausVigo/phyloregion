@@ -7,9 +7,12 @@
 #' @param ... further arguments passed to or from other methods.
 #' @keywords cluster
 #' @rdname read.community
-##'@importFrom Matrix Matrix
-##'@importFrom Matrix sparseMatrix
-##'@importFrom phangorn as.splits
+#' @importFrom ape Nnode Ntip
+#' @importFrom Matrix Matrix
+#' @importFrom Matrix sparseMatrix
+#' @importFrom phangorn as.splits
+#' @importFrom methods is
+#' @importFrom utils read.csv
 #' @export
 read.community <- function(file, ...){
   d <- read.csv(file, ...)
@@ -32,7 +35,7 @@ as.splits.matrix <- function(x){
 }
 
 as.splits.data.frame <- function(x){
-  as.community(as.matrix(x))
+  as.splits(as.matrix(x))
 }
 
 

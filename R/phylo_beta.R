@@ -42,18 +42,16 @@ phylo_com <- function(tip, phy){
 
 #' Phylogenetic community objects
 #'
-#' read.community reads in file containing occurence data and returns a sparse
-#' matrix.
-#'
-#' If species is not in the tip label species is added to the genus or family
-#' level when possible
+#' phylo_community converts a community matrix and a tree in phylogenetic
+#' community matrix. This objects allows for efficient computation of
+#' phylogenetic diversity (pd) and beta diversity indices (phylo_betapart_core).
 #'
 #' @aliases phylo_community pd phylo_betapart_core
 #' @param x an object of class Matrix or phylo_community
 #' @param phy a phylogenetic tree (object of class phylo)
 #'
 #' @keywords cluster
-#' @examples
+#' @seealso read.community
 #' @examples
 #' tree <- read.tree(text ="((t1:1,t2:1)N2:1,(t3:1,t4:1)N3:1)N1;")
 #' com <- matrix(c(1,0,1,1,0,0,

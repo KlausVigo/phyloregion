@@ -5,9 +5,10 @@ Version: 0.1.0
 Author: Klaus Schliep <klaus.schliep@gmail.com>, 
         Barnabas H. Daru <darunabas@gmail.com>
 Maintainer: Klaus Schliep <klaus.schliep@gmail.com>
-Description: It delineates regions into geographic units
-Depends: phangorn, ape (>= 5.0)
-Imports: Matrix, fastmatch, parallel 
+Description: phyloregion contains efficient functions to compute betadiversity 
+and phylogentic diversity. 
+It allows delineates regions into geographic units.
+Imports: Matrix, fastmatch, parallel, methods, phangorn, ape (>= 5.0) 
 Suggests: brranching, betapart
 License: AGPL-3
 Encoding: UTF-8

@@ -5,12 +5,13 @@
 #' added at the most recent commaon ancestor at the genus or family level when
 #' possible.
 #'
-#' @param species_list Species list
+#' @param species A vector or matrix containing a species list
 #' @param tree a phylogenetic tree (object of class phylo)
 #' @param output.species_list return species list
 #' @keywords cluster
 #' @importFrom ape drop.tip stripLabel label2table getMRCA
 #' @importFrom parallel mclapply
+#' @importFrom phangorn add.tips
 #' @export
 phylo_builder <- function (species, tree, output.species_list = TRUE)
 {
