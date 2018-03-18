@@ -59,11 +59,8 @@ phylo_builder <- function (species, tree, output.species_list = TRUE,
 
   if (length(add_tip) > 0){
 
-#browser()
-
     unique_genera <- unique(species_list$genus[add_tip])
     tree_genera <- as.character(label2table(T1$tip)$"genus")
-#    tmp <- match(tree_genera, unique_genera)
 
     fun <- function(g, g_tree){
       tmp <- match(g_tree, g)
@@ -84,33 +81,20 @@ phylo_builder <- function (species, tree, output.species_list = TRUE,
     ll <- ll_unique[tmp]
 
     tips <- tree$tip.label
-#browser()
     tips2add <- NULL
     where2add <- NULL
     if(any(ll==1)){
       tmp_num <- unlist(nn[ll==1])
       num <- T1$edge[match(tmp_num, T1$edge[,2]), 1]
       where2add <- c(where2add, num)
-#      ind <- add_tip[ll==1]
       tips2add <- species_list$species[add_tip[ll==1]]
-#      T1 <- add.tips(T1, tips=species_list$species[ind], where = num)
     }
     if(any(ll > 1)){
-
       tips2add <- c(tips2add, species_list$species[add_tip[ll > 1]] )
-#      ind <- which(ll>1) # add_tip[which(ll>1)]
-#      for (i in ind) {
-#        n <- grep(paste(species_list$genus[ add_tip[i] ], "_", sep = ""),
-#                  T1$tip.label)
-
       fun2 <- function(x, tree) ifelse(length(x)>1, getMRCA(tree, x), 0)
-#      num <- mclapply(nn[ll>1],  function(x, tree)getMRCA(tree, x) , tree=T1)
       num <- mclapply(nn_unique,  fun2 , tree=T1)
       num <- (unlist(num)[tmp])[ll > 1]
       where2add <- c(where2add, unlist(num))
-#        num <- getMRCA(T1, T1$tip.label[ nn[[i]] ])
-#        T1 <- add.tips(T1, species_list$species[ add_tip[i] ], where = num)
-#      }
     }
     if(!is.null(where2add)) T1 <- add.tips(T1, tips2add, where = where2add)
     species_list$add[add_tip[ll>0]] <- "genus"
@@ -120,7 +104,8 @@ phylo_builder <- function (species, tree, output.species_list = TRUE,
       if("family" %in% colnames(species_list)){
         ind <- add_tip [species_list$family[add_tip] %in% T1$node.label]
         if(length(ind)>0){
-          num <- match(species_list$family[ind], T1$node.label) + length(T1$tip.label)
+          num <- match(species_list$family[ind], T1$node.label)
+                  + length(T1$tip.label)
           T1 <- add.tips(T1, tips=species_list$species[ind], num)
           species_list$add[ind] <- "family"
         }
@@ -128,7 +113,8 @@ phylo_builder <- function (species, tree, output.species_list = TRUE,
     }
 
   }
-  toDrop <- setdiff(T1$tip.label, species_list$species[species_list$add!="missing"])
+  toDrop <- setdiff(T1$tip.label,
+                    species_list$species[species_list$add!="missing"])
   T1 <- drop.tip(T1, tip = toDrop)
   attr(T1, "species_list") <- species_list
   T1

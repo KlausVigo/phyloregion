@@ -1,3 +1,6 @@
+#'@importFrom betapart phylo.beta.multi
+#'@importFrom betapart phylo.beta.pair
+
 #
 # occurence --> phylogenetic occurence --> phylo beta
 #           --> beta
@@ -52,9 +55,19 @@ phylo_com <- function(tip, phy){
 #' @param output.splist return species list
 #' @keywords cluster
 #' @examples
-#' example(as.community)
+#' @examples
+#' tree <- read.tree(text ="((t1:1,t2:1)N2:1,(t3:1,t4:1)N3:1)N1;")
+#' com <- matrix(c(1,0,1,1,0,0,
+#'                 1,0,0,1,1,0,
+#'                 1,1,1,1,1,1,
+#'                 0,0,1,1,0,1), 6, 4,
+#'               dimnames=list(paste0("g",1:6), tree$tip.label))
 #' pc <- phylo_community(com, tree)
 #' pd(pc)
+#' pbc <- phylo_betapart_core(pc)
+#' library(betapart)
+#' phylo.beta.multi(pbc)
+#' phylo.beta.pair(pbc)
 #'
 #' @rdname phylo_community
 #' @export
@@ -62,7 +75,7 @@ phylo_community <- function(x, phy){
   el <- numeric(max(phy$edge))
   el[phy$edge[,2]] <- phy$edge.length
   if(is.matrix(x) | is(x, "sparseMatrix")){
-    x <- as.community(x)
+    x <- as.splits(x)
   }
   if(is.character(x) | is.numeric(x))  y <- list(phylo_com(x, phy))
   if(is.list(x)){
@@ -70,7 +83,8 @@ phylo_community <- function(x, phy){
   }
   if(is.null(y)) return(NULL)
   attr(y, "edge.length") <- el
-  attr(y, "labels") <- c(phy$tip.label, as.character(Ntip(phy) + (1:Nnode(phy))))
+  attr(y, "labels") <- c(phy$tip.label, as.character(Ntip(phy)
+                                                     + (1:Nnode(phy))))
   class(y) <- c("phylo_community", "splits")
   y
 }
@@ -91,6 +105,7 @@ pd <- function(x, tree=NULL){
 
 
 #' @rdname phylo_community
+#' @importFrom fastmatch fmatch
 #' @export
 phylo_betapart_core <- function(x){
   l <- length(x)
@@ -119,31 +134,55 @@ phylo_betapart_core <- function(x){
   min.not.shared <- pmin(B,C)
 
   at <- structure(list(Labels=Labels, Size = l, class = "dist", Diag = FALSE,
-                       Upper = FALSE), .Names = c("Labels", "Size", "class", "Diag", "Upper"))
+        Upper = FALSE), .Names = c("Labels", "Size", "class", "Diag", "Upper"))
   attributes(SHARED) <- at
   attributes(sum.not.shared) <- at
   attributes(max.not.shared) <- at
   attributes(min.not.shared) <- at
-  res <- list(sumSi=sum(pd_tmp), St=sum(el), shared=SHARED, sum.not.shared = sum.not.shared,
+  res <- list(sumSi=sum(pd_tmp), St=sum(el), shared=SHARED,
+              sum.not.shared = sum.not.shared,
               max.not.shared=max.not.shared, min.not.shared=min.not.shared)
   class(res) <- "phylo.betapart"
   res
 }
 
-# based on picante needs improvement
-match.phylo.comm <- function (phy, comm, trace=1)
+
+#' Match taxa and in phylogeny and community matrix
+#'
+#' match.phylo.comm compares taxa (species, labels, tips) present in a phylogeny
+#' with a community matrix. Pruning, sorting and trying to add missing species
+#' on genus level if possible to match in subsequent analysis.
+#'
+#' Based on the function of the same name in picante but allows sparse matrices
+#' and with taxa addition.
+#'
+#' @aliases read.community as.community as.community.matrix print.community
+#' @param phy A phylogeny
+#' @param comm A (sparse) community data matrix
+#' @param add.genus Add species on a genus level if possible
+#' @param trace Print comments
+#' @keywords cluster
+#' @export
+match.phylo.comm <- function (phy, comm, add.genus=TRUE, trace=1)
 {
   if (!(is.data.frame(comm) | is.matrix(comm) | inherits(comm, "Matrix") )) {
-    stop("Community data should be a data.frame or matrix with samples in rows and taxa in columns")
+    stop("Community data should be a data.frame or matrix with samples in rows
+         and taxa in columns")
   }
   res <- list()
-  phytaxa <- phy$tip.label
   commtaxa <- colnames(comm)
+
   if (is.null(commtaxa)) {
     stop("Community data set lacks taxa (column) names, these are required to
          match phylogeny and community data")
   }
-  if (!all(commtaxa %in% phytaxa)) {
+
+  phytaxa <- phy$tip.label
+  if(add.genus & (!all(commtaxa %in% phytaxa)) ){
+    phy <- phylo_builder(comm, phy)
+    phytaxa <- phy$tip.label
+  }
+  if(!all(commtaxa %in% phytaxa)){
     if(trace){
       print("Dropping taxa from the community because they are not present in
             the phylogeny:")
@@ -158,7 +197,7 @@ match.phylo.comm <- function (phy, comm, trace=1)
                     the community data:")
       print(setdiff(phytaxa, commtaxa))
     }
-    res$phy <- prune.sample(comm, phy)
+    res$phy <- drop.tip(phy, setdiff(phytaxa, commtaxa))
   }
   else {
     res$phy <- phy
