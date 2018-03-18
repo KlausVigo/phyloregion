@@ -48,11 +48,10 @@ phylo_com <- function(tip, phy){
 #' If species is not in the tip label species is added to the genus or family
 #' level when possible
 #'
-#' @aliases read.community as.community as.community.matrix print.community
-#' @param splist Species list
-#' @param tree a phylogenetic tree (object of class phylo)
-#' @param nodes node list
-#' @param output.splist return species list
+#' @aliases phylo_community pd phylo_betapart_core
+#' @param x an object of class Matrix or phylo_community
+#' @param phy a phylogenetic tree (object of class phylo)
+#'
 #' @keywords cluster
 #' @examples
 #' @examples
@@ -156,7 +155,6 @@ phylo_betapart_core <- function(x){
 #' Based on the function of the same name in picante but allows sparse matrices
 #' and with taxa addition.
 #'
-#' @aliases read.community as.community as.community.matrix print.community
 #' @param phy A phylogeny
 #' @param comm A (sparse) community data matrix
 #' @param add.genus Add species on a genus level if possible

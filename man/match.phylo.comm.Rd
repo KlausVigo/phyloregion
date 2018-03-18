@@ -2,10 +2,6 @@
 % Please edit documentation in R/phylo_beta.R
 \name{match.phylo.comm}
 \alias{match.phylo.comm}
-\alias{read.community}
-\alias{as.community}
-\alias{as.community.matrix}
-\alias{print.community}
 \title{Match taxa and in phylogeny and community matrix}
 \usage{
 match.phylo.comm(phy, comm, add.genus = TRUE, trace = 1)

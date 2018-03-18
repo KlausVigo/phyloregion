@@ -2,10 +2,8 @@
 % Please edit documentation in R/phylo_beta.R
 \name{phylo_community}
 \alias{phylo_community}
-\alias{read.community}
-\alias{as.community}
-\alias{as.community.matrix}
-\alias{print.community}
+\alias{pd}
+\alias{phylo_betapart_core}
 \alias{pd}
 \alias{phylo_betapart_core}
 \title{Phylogenetic community objects}
@@ -17,13 +15,9 @@ pd(x, tree = NULL)
 phylo_betapart_core(x)
 }
 \arguments{
-\item{tree}{a phylogenetic tree (object of class phylo)}
+\item{x}{an object of class Matrix or phylo_community}
 
-\item{splist}{Species list}
-
-\item{nodes}{node list}
-
-\item{output.splist}{return species list}
+\item{phy}{a phylogenetic tree (object of class phylo)}
 }
 \description{
 read.community reads in file containing occurence data and returns a sparse

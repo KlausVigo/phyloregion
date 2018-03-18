@@ -7,20 +7,12 @@
 read.community(file, ...)
 }
 \arguments{
-\item{splist}{Species list}
+\item{file}{A file name.}
 
-\item{tree}{a phylogenetic tree (object of class phylo)}
-
-\item{nodes}{node list}
-
-\item{output.splist}{return species list}
+\item{...}{further arguments passed to or from other methods.}
 }
 \description{
 read.community reads in file containing occurence data and returns a sparse
 matrix.
-}
-\details{
-If species is not in the tip label species is added to the genus or family
-level when possible
 }
 \keyword{cluster}

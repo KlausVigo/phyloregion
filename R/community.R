@@ -3,13 +3,8 @@
 #' read.community reads in file containing occurence data and returns a sparse
 #' matrix.
 #'
-#' If species is not in the tip label species is added to the genus or family
-#' level when possible
-#'
-#' @param splist Species list
-#' @param tree a phylogenetic tree (object of class phylo)
-#' @param nodes node list
-#' @param output.splist return species list
+#' @param file A file name.
+#' @param ... further arguments passed to or from other methods.
 #' @keywords cluster
 #' @rdname read.community
 ##'@importFrom Matrix Matrix
