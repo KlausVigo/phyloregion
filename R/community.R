@@ -8,8 +8,7 @@
 #' @keywords cluster
 #' @rdname read.community
 #' @importFrom ape Nnode Ntip
-#' @importFrom Matrix Matrix
-#' @importFrom Matrix sparseMatrix
+#' @importFrom Matrix Matrix sparseMatrix t
 #' @importFrom phangorn as.splits
 #' @importFrom methods is
 #' @importFrom utils read.csv
@@ -17,7 +16,7 @@
 read.community <- function(file, ...){
   d <- read.csv(file, ...)
   M <- Matrix::sparseMatrix(as.integer(d[,"grids"]), as.integer(d[,"species"]),
-                            dimnames = list(levels(d[,"grids"]), levels(d[,"species"])))
+                  dimnames = list(levels(d[,"grids"]), levels(d[,"species"])))
   M
 }
 

@@ -8,7 +8,7 @@ Maintainer: Klaus Schliep <klaus.schliep@gmail.com>
 Description: It delineates regions into geographic units.
 Depends: ape, phangorn 
 Imports: Matrix, fastmatch, parallel, methods 
-Suggests: brranching, betapart
+Suggests: betapart
 License: AGPL-3
 Encoding: UTF-8
 RoxygenNote: 6.0.1
