@@ -159,7 +159,7 @@ phylo_betapart_core <- function(x){
 #' @param trace Print comments
 #' @keywords cluster
 #' @export
-match.phylo.comm <- function (phy, comm, add.genus=TRUE, trace=1)
+match.phylo.comm <- function (phy, comm, add.genus=TRUE, trace=0)
 {
   if (!(is.data.frame(comm) | is.matrix(comm) | inherits(comm, "Matrix") )) {
     stop("Community data should be a data.frame or matrix with samples in rows
@@ -183,6 +183,10 @@ match.phylo.comm <- function (phy, comm, add.genus=TRUE, trace=1)
       print("Dropping taxa from the community because they are not present in
             the phylogeny:")
       print(setdiff(commtaxa, phytaxa))
+    }
+    if(length(intersect(commtaxa, phytaxa)) == 0){
+      print("No overlab in labels")
+      return(NULL)
     }
     comm <- comm[, intersect(commtaxa, phytaxa)]
     commtaxa <- colnames(comm)
