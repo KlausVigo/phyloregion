@@ -4,7 +4,7 @@
 \alias{match.phylo.comm}
 \title{Match taxa and in phylogeny and community matrix}
 \usage{
-match.phylo.comm(phy, comm, add.genus = TRUE, trace = 1)
+match.phylo.comm(phy, comm, add.genus = TRUE, trace = 0)
 }
 \arguments{
 \item{phy}{A phylogeny}

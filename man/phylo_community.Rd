@@ -4,8 +4,6 @@
 \alias{phylo_community}
 \alias{pd}
 \alias{phylo_betapart_core}
-\alias{pd}
-\alias{phylo_betapart_core}
 \title{Phylogenetic community objects}
 \usage{
 phylo_community(x, phy)

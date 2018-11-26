@@ -2,7 +2,7 @@
 #'
 #' phylobuilder creates a subtree with largest overlap from a species list.
 #' If species in the species list are not already in the tip label, species will
-#' added at the most recent commaon ancestor at the genus or family level when
+#' added at the most recent common ancestor at the genus or family level when
 #' possible.
 #'
 #' @param species A vector or matrix containing a species list
