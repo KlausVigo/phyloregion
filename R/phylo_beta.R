@@ -175,7 +175,7 @@ match.phylo.comm <- function (phy, comm, add.genus=TRUE, trace=0)
 
   phytaxa <- phy$tip.label
   if(add.genus & (!all(commtaxa %in% phytaxa)) ){
-    phy <- phylo_builder(comm, phy)
+    phy <- phylo_builder(commtaxa, phy)
     phytaxa <- phy$tip.label
   }
   if(!all(commtaxa %in% phytaxa)){
