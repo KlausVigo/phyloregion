@@ -158,6 +158,9 @@ phylo_betapart_core <- function(x){
 #' @param add.genus Add species on a genus level if possible
 #' @param trace Print comments
 #' @keywords cluster
+#' @examples
+#' example(phylo_builder)
+#' pc <- match.phylo.comm(tree, comm)
 #' @export
 match.phylo.comm <- function (phy, comm, add.genus=TRUE, trace=0)
 {

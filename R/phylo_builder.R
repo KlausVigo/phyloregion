@@ -12,6 +12,11 @@
 #' @importFrom ape drop.tip stripLabel label2table getMRCA
 #' @importFrom parallel mclapply
 #' @importFrom phangorn add.tips
+#' @examples
+#' fdir <- system.file("extdata", package = "phyloregion")
+#' comm <- read.community(file.path(fdir, "Korea_PRESAB_sample.csv"))
+#' tree <- read.tree(file.path(fdir, "Korea_PRESAB_sample.csv"))
+#' tree <- phylo_builder(colnames(comm), tree)
 #' @export
 phylo_builder <- function (species, tree, output.species_list = TRUE)
 {

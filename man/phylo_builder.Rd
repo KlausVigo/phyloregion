@@ -19,4 +19,10 @@ If species in the species list are not already in the tip label, species will
 added at the most recent common ancestor at the genus or family level when
 possible.
 }
+\examples{
+fdir <- system.file("extdata", package = "phyloregion")
+comm <- read.community(file.path(fdir, "Korea_PRESAB_sample.csv"))
+tree <- read.tree(file.path(fdir, "Korea_PRESAB_sample.csv"))
+tree <- phylo_builder(colnames(comm), tree)
+}
 \keyword{cluster}

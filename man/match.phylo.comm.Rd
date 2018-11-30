@@ -24,4 +24,8 @@ on genus level if possible to match in subsequent analysis.
 Based on the function of the same name in picante but allows sparse matrices
 and with taxa addition.
 }
+\examples{
+example(phylo_builder)
+pc <- match.phylo.comm(tree, comm)
+}
 \keyword{cluster}
