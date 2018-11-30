@@ -15,4 +15,8 @@ read.community(file, ...)
 read.community reads in file containing occurence data and returns a sparse
 matrix.
 }
+\examples{
+fdir <- system.file("extdata", package = "phyloregion")
+comm <- read.community(file.path(fdir, "Korea_PRESAB_sample.csv"))
+}
 \keyword{cluster}

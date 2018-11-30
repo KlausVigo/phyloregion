@@ -12,7 +12,7 @@
 #' @importFrom phangorn as.splits
 #' @importFrom methods is
 #' @importFrom utils read.csv
-#' @example
+#' @examples
 #' fdir <- system.file("extdata", package = "phyloregion")
 #' comm <- read.community(file.path(fdir, "Korea_PRESAB_sample.csv"))
 #' @export
