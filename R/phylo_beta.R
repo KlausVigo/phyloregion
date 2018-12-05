@@ -155,14 +155,13 @@ phylo_betapart_core <- function(x){
 #'
 #' @param phy A phylogeny
 #' @param comm A (sparse) community data matrix
-#' @param add.genus Add species on a genus level if possible
 #' @param trace Print comments
 #' @keywords cluster
 #' @examples
 #' example(phylo_builder)
 #' pc <- match.phylo.comm(tree, comm)
 #' @export
-match.phylo.comm <- function (phy, comm, add.genus=TRUE, trace=0)
+match.phylo.comm <- function (phy, comm, trace=0)
 {
   if (!(is.data.frame(comm) | is.matrix(comm) | inherits(comm, "Matrix") )) {
     stop("Community data should be a data.frame or matrix with samples in rows
@@ -177,10 +176,6 @@ match.phylo.comm <- function (phy, comm, add.genus=TRUE, trace=0)
   }
 
   phytaxa <- phy$tip.label
-  if(add.genus & (!all(commtaxa %in% phytaxa)) ){
-    phy <- phylo_builder(commtaxa, phy)
-    phytaxa <- phy$tip.label
-  }
   if(!all(commtaxa %in% phytaxa)){
     if(trace){
       print("Dropping taxa from the community because they are not present in

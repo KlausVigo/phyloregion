@@ -4,14 +4,12 @@
 \alias{match.phylo.comm}
 \title{Match taxa and in phylogeny and community matrix}
 \usage{
-match.phylo.comm(phy, comm, add.genus = TRUE, trace = 0)
+match.phylo.comm(phy, comm, trace = 0)
 }
 \arguments{
 \item{phy}{A phylogeny}
 
 \item{comm}{A (sparse) community data matrix}
-
-\item{add.genus}{Add species on a genus level if possible}
 
 \item{trace}{Print comments}
 }
