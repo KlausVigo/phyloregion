@@ -6,9 +6,10 @@ Author: Klaus Schliep <klaus.schliep@gmail.com>,
         Barnabas H. Daru <darunabas@gmail.com>
 Maintainer: Klaus Schliep <klaus.schliep@gmail.com>
 Description: It delineates regions into geographic units.
-Depends: ape, phangorn 
-Imports: Matrix, fastmatch, parallel, methods 
-Suggests: betapart
+Imports: ape, phangorn, Matrix, fastmatch, parallel, methods 
+Suggests: betapart, testthat
+URL: https://github.com/KlausVigo/phyloregion
+BugReports: https://github.com/KlausVigo/phyloregion/issues
 License: AGPL-3
 Encoding: UTF-8
 RoxygenNote: 6.1.1

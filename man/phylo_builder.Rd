@@ -20,6 +20,7 @@ added at the most recent common ancestor at the genus or family level when
 possible.
 }
 \examples{
+library(ape)
 fdir <- system.file("extdata", package = "phyloregion")
 comm <- read.community(file.path(fdir, "Korea_PRESAB_sample.csv"))
 tree <- read.tree(file.path(fdir, "PhytoPhylo.tre"))

@@ -13,6 +13,7 @@
 #' @importFrom parallel mclapply
 #' @importFrom phangorn add.tips
 #' @examples
+#' library(ape)
 #' fdir <- system.file("extdata", package = "phyloregion")
 #' comm <- read.community(file.path(fdir, "Korea_PRESAB_sample.csv"))
 #' tree <- read.tree(file.path(fdir, "PhytoPhylo.tre"))

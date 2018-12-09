@@ -23,6 +23,7 @@ community matrix. This objects allows for efficient computation of
 phylogenetic diversity (pd) and beta diversity indices (phylo_betapart_core).
 }
 \examples{
+library(ape)
 tree <- read.tree(text ="((t1:1,t2:1)N2:1,(t3:1,t4:1)N3:1)N1;")
 com <- matrix(c(1,0,1,1,0,0,
                 1,0,0,1,1,0,
