@@ -18,6 +18,28 @@ pbc_phyloregion <- phylo_betapart_core(pc)
 pbc_betapart <- phylo.betapart.core(com, tree)
 
 
+fdir <- system.file("extdata", package = "phyloregion")
+comm <- read.community(file.path(fdir, "Korea_PRESAB_sample.csv"))
+tree <- read.tree(file.path(fdir, "PhytoPhylo.tre"))
+
+pc <- match.phylo.comm(tree, comm)
+pb_tree <- phylo_builder(colnames(comm), tree)
+
+test_that("read.community works", {
+  ## common subtrees should be identical
+  expect_is(comm, "Matrix")
+  expect_is(pc$comm, "Matrix")
+})
+
+
+test_that("phylo_builder works", {
+  ## common subtrees should be identical
+  expect_is(pc$phy, "phylo")
+  expect_is(pb_tree, "phylo")
+  expect_gt(Ntip(pb_tree), Ntip(pc$phy))
+  expect_false(is.binary(pb_tree))
+})
+
 test_that("phylo_betapart_core works", {
   ## common subtrees should be identical
   expect_equal(phylo.beta.multi(pbc_phyloregion),

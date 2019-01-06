@@ -96,7 +96,8 @@ pd <- function(x, phy=NULL){
     el[phy$edge[,2]] <- phy$edge.length
   }
   else el <- attr(x, "edge.length")
-  if(is.list(x)) res <- sapply(x, function(x, el)sum(el[x]), el)
+#  if(is.list(x)) res <- sapply(x, function(x, el)sum(el[x]), el)
+  if(is.list(x)) res <- vapply(x, function(x, el)sum(el[x]), 0, el)
   else res <- sum(el[x]) #fun(x, tree)
   res
 }
