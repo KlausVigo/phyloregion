@@ -7,7 +7,6 @@
 #'
 #' @param species A vector or matrix containing a species list
 #' @param tree a phylogenetic tree (object of class phylo)
-#' @param output.species_list return species list
 #' @keywords cluster
 #' @importFrom ape drop.tip stripLabel label2table getMRCA
 #' @importFrom parallel mclapply
@@ -19,7 +18,7 @@
 #' tree <- read.tree(file.path(fdir, "PhytoPhylo.tre"))
 #' tree <- phylo_builder(colnames(comm), tree)
 #' @export
-phylo_builder <- function (species, tree, output.species_list = TRUE)
+phylo_builder <- function (species, tree)
 {
   taxonomy <- c("species", "genus", "family")
 #  ,"suborder", "order", "class", "phylum", "kingdom")
