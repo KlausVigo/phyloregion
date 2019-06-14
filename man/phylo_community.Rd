@@ -4,13 +4,17 @@
 \alias{phylo_community}
 \alias{pd}
 \alias{phylo_betapart_core}
+\alias{phylobeta.core}
+\alias{beta.sparse.core}
 \title{Phylogenetic community objects}
 \usage{
 phylo_community(x, phy)
 
 pd(x, phy = NULL)
 
-phylo_betapart_core(x)
+phylobeta.core(x)
+
+beta.sparse.core(x)
 }
 \arguments{
 \item{x}{an object of class Matrix or phylo_community}

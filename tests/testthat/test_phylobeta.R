@@ -22,7 +22,7 @@ fdir <- system.file("extdata", package = "phyloregion")
 comm <- read.community(file.path(fdir, "Korea_PRESAB_sample.csv"))
 tree <- read.tree(file.path(fdir, "PhytoPhylo.tre"))
 
-pc <- match.phylo.comm(tree, comm)
+pc <- match_phylo_comm(tree, comm)
 pb_tree <- phylo_builder(colnames(comm), tree)
 
 test_that("read.community works", {

@@ -72,9 +72,11 @@ phylo_com <- function(tip, phy){
 phylo_community <- function(x, phy){
   el <- numeric(max(phy$edge))
   el[phy$edge[,2]] <- phy$edge.length
+  x <- x[, phy$tip.label]
   if(is.matrix(x) | is(x, "sparseMatrix")){
     x <- as.splits(x)
   }
+#  x <- phangorn::changeOrder(x, phy$tip.label)
   if(is.character(x) | is.numeric(x))  y <- list(phylo_com(x, phy))
   if(is.list(x)){
     y <- lapply(x, function(x, phy)phylo_com(x, phy), phy)
@@ -96,7 +98,6 @@ pd <- function(x, phy=NULL){
     el[phy$edge[,2]] <- phy$edge.length
   }
   else el <- attr(x, "edge.length")
-#  if(is.list(x)) res <- sapply(x, function(x, el)sum(el[x]), el)
   if(is.list(x)) res <- vapply(x, function(x, el)sum(el[x]), 0, el)
   else res <- sum(el[x]) #fun(x, tree)
   res
@@ -106,7 +107,7 @@ pd <- function(x, phy=NULL){
 #' @rdname phylo_community
 #' @importFrom fastmatch fmatch
 #' @export
-phylo_betapart_core <- function(x){
+phylobeta.core <- function(x){
   l <- length(x)
   pd_tmp <- pd(x)
   el <- attr(x, "edge.length")
@@ -148,7 +149,7 @@ phylo_betapart_core <- function(x){
 
 #' Match taxa and in phylogeny and community matrix
 #'
-#' match.phylo.comm compares taxa (species, labels, tips) present in a phylogeny
+#' match_phylo_comm compares taxa (species, labels, tips) present in a phylogeny
 #' with a community matrix. Pruning, sorting and trying to add missing species
 #' on genus level if possible to match in subsequent analysis.
 #'
@@ -161,48 +162,50 @@ phylo_betapart_core <- function(x){
 #' @keywords cluster
 #' @examples
 #' example(phylo_builder)
-#' pc <- match.phylo.comm(tree, comm)
+#' pc <- match_phylo_comm(tree, comm)
 #' @export
-match.phylo.comm <- function (phy, comm, trace=0)
+match_phylo_comm <- function (phy, comm)
 {
   if (!(is.data.frame(comm) | is.matrix(comm) | inherits(comm, "Matrix") )) {
     stop("Community data should be a data.frame or matrix with samples in rows
          and taxa in columns")
   }
-  res <- list()
+  res <- vector("list", 2)
   commtaxa <- colnames(comm)
-
   if (is.null(commtaxa)) {
     stop("Community data set lacks taxa (column) names, these are required to
          match phylogeny and community data")
   }
-
   phytaxa <- phy$tip.label
-  if(!all(commtaxa %in% phytaxa)){
-    if(trace){
-      print("Dropping taxa from the community because they are not present in
-            the phylogeny:")
-      print(setdiff(commtaxa, phytaxa))
-    }
-    if(length(intersect(commtaxa, phytaxa)) == 0){
-      print("No overlab in labels")
-      return(NULL)
-    }
-    comm <- comm[, intersect(commtaxa, phytaxa)]
-    commtaxa <- colnames(comm)
-  }
-  if (any(!(phytaxa %in% commtaxa))) {
-    if(trace){
-      print("Dropping tips from the tree because they are not present in
-                    the community data:")
-      print(setdiff(phytaxa, commtaxa))
-    }
-    res$phy <- drop.tip(phy, setdiff(phytaxa, commtaxa))
-  }
-  else {
-    res$phy <- phy
-  }
-  res$comm <- comm[, res$phy$tip.label]
+  index <- intersect(commtaxa, phytaxa)
+  res$comm <- comm[, index]
+  res$phy <- keep.tip(phy, index)
   return(res)
 }
 
+
+#' @rdname phylo_community
+#' @importFrom Matrix Matrix tcrossprod colSums
+#' @export
+beta.sparse.core <- function (x) {
+  if (!inherits(x, "Matrix")) x <- Matrix(x)
+
+  #    xvals <- unique(as.vector(x))
+  #    if (any(!is.element(xvals, c(0, 1))))
+  #        stop("The table contains values other than 0 and 1: data should be presence/absence.",
+  #            call. = TRUE)
+
+  shared <- as.matrix( tcrossprod(x) )# %*% t(x)
+  not.shared <- abs(sweep(shared, 2, diag(shared)))
+  sumSi <- sum(diag(shared))
+  St <- sum(colSums(x) > 0)
+  a <- sumSi - St
+  sum.not.shared <- not.shared + t(not.shared)
+  max.not.shared <- pmax(not.shared, t(not.shared))
+  min.not.shared <- pmin(not.shared, t(not.shared))
+  computations <- list(data = x, sumSi = sumSi, St = St, a = a,
+                       shared = shared, not.shared = not.shared, sum.not.shared = sum.not.shared,
+                       max.not.shared = max.not.shared, min.not.shared = min.not.shared)
+  class(computations) <- "betapart"
+  return(computations)
+}
