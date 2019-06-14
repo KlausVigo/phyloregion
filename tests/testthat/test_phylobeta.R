@@ -14,7 +14,7 @@ com <- matrix(c(1,0,1,1,0,0,
                 dimnames=list(paste0("g",1:6), tree$tip.label))
 pc <- phylo_community(com, tree)
 pd(pc)
-pbc_phyloregion <- phylo_betapart_core(pc)
+pbc_phyloregion <- phylobeta_core(pc)
 pbc_betapart <- phylo.betapart.core(com, tree)
 
 

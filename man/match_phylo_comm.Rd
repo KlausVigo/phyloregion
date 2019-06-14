@@ -10,8 +10,6 @@ match_phylo_comm(phy, comm)
 \item{phy}{A phylogeny}
 
 \item{comm}{A (sparse) community data matrix}
-
-\item{trace}{Print comments}
 }
 \description{
 match_phylo_comm compares taxa (species, labels, tips) present in a phylogeny

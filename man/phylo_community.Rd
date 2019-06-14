@@ -4,17 +4,17 @@
 \alias{phylo_community}
 \alias{pd}
 \alias{phylo_betapart_core}
-\alias{phylobeta.core}
-\alias{beta.sparse.core}
+\alias{phylobeta_core}
+\alias{beta_sparse_core}
 \title{Phylogenetic community objects}
 \usage{
 phylo_community(x, phy)
 
 pd(x, phy = NULL)
 
-phylobeta.core(x)
+phylobeta_core(x)
 
-beta.sparse.core(x)
+beta_sparse_core(x)
 }
 \arguments{
 \item{x}{an object of class Matrix or phylo_community}
@@ -36,7 +36,7 @@ com <- matrix(c(1,0,1,1,0,0,
               dimnames=list(paste0("g",1:6), tree$tip.label))
 pc <- phylo_community(com, tree)
 pd(pc)
-pbc <- phylo_betapart_core(pc)
+pbc <- phylobeta_core(pc)
 library(betapart)
 phylo.beta.multi(pbc)
 phylo.beta.pair(pbc)

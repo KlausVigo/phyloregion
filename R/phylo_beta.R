@@ -62,7 +62,7 @@ phylo_com <- function(tip, phy){
 #'               dimnames=list(paste0("g",1:6), tree$tip.label))
 #' pc <- phylo_community(com, tree)
 #' pd(pc)
-#' pbc <- phylo_betapart_core(pc)
+#' pbc <- phylobeta_core(pc)
 #' library(betapart)
 #' phylo.beta.multi(pbc)
 #' phylo.beta.pair(pbc)
@@ -107,7 +107,7 @@ pd <- function(x, phy=NULL){
 #' @rdname phylo_community
 #' @importFrom fastmatch fmatch
 #' @export
-phylobeta.core <- function(x){
+phylobeta_core <- function(x){
   l <- length(x)
   pd_tmp <- pd(x)
   el <- attr(x, "edge.length")
@@ -158,11 +158,11 @@ phylobeta.core <- function(x){
 #'
 #' @param phy A phylogeny
 #' @param comm A (sparse) community data matrix
-#' @param trace Print comments
 #' @keywords cluster
 #' @examples
 #' example(phylo_builder)
 #' pc <- match_phylo_comm(tree, comm)
+#' @importFrom ape keep.tip
 #' @export
 match_phylo_comm <- function (phy, comm)
 {
@@ -187,13 +187,8 @@ match_phylo_comm <- function (phy, comm)
 #' @rdname phylo_community
 #' @importFrom Matrix Matrix tcrossprod colSums
 #' @export
-beta.sparse.core <- function (x) {
+beta_sparse_core <- function (x) {
   if (!inherits(x, "Matrix")) x <- Matrix(x)
-
-  #    xvals <- unique(as.vector(x))
-  #    if (any(!is.element(xvals, c(0, 1))))
-  #        stop("The table contains values other than 0 and 1: data should be presence/absence.",
-  #            call. = TRUE)
 
   shared <- as.matrix( tcrossprod(x) )# %*% t(x)
   not.shared <- abs(sweep(shared, 2, diag(shared)))
@@ -203,9 +198,10 @@ beta.sparse.core <- function (x) {
   sum.not.shared <- not.shared + t(not.shared)
   max.not.shared <- pmax(not.shared, t(not.shared))
   min.not.shared <- pmin(not.shared, t(not.shared))
-  computations <- list(data = x, sumSi = sumSi, St = St, a = a,
-                       shared = shared, not.shared = not.shared, sum.not.shared = sum.not.shared,
-                       max.not.shared = max.not.shared, min.not.shared = min.not.shared)
+  computations <- list(data = x, sumSi = sumSi, St = St, a = a, shared = shared,
+                       not.shared = not.shared, sum.not.shared = sum.not.shared,
+                       max.not.shared = max.not.shared,
+                       min.not.shared = min.not.shared)
   class(computations) <- "betapart"
   return(computations)
 }
