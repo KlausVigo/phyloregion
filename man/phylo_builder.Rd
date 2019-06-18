@@ -24,4 +24,7 @@ comm <- read.community(file.path(fdir, "Korea_PRESAB_sample.csv"))
 tree <- read.tree(file.path(fdir, "PhytoPhylo.tre"))
 tree <- phylo_builder(colnames(comm), tree)
 }
+\seealso{
+\code{\link[phangorn]{add.tips}}
+}
 \keyword{cluster}

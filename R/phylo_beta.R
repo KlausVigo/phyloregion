@@ -40,35 +40,7 @@ phylo_com <- function(tip, phy){
     sort(res[1:l])
 }
 
-#' Phylogenetic community objects
-#'
-#' phylo_community converts a community matrix and a tree in phylogenetic
-#' community matrix. This objects allows for efficient computation of
-#' phylogenetic diversity (pd) and beta diversity indices (phylo_betapart_core).
-#'
-#' @aliases phylo_community pd phylo_betapart_core
-#' @param x an object of class Matrix or phylo_community
-#' @param phy a phylogenetic tree (object of class phylo)
-#'
-#' @keywords cluster
-#' @seealso read.community
-#' @examples
-#' library(ape)
-#' tree <- read.tree(text ="((t1:1,t2:1)N2:1,(t3:1,t4:1)N3:1)N1;")
-#' com <- matrix(c(1,0,1,1,0,0,
-#'                 1,0,0,1,1,0,
-#'                 1,1,1,1,1,1,
-#'                 0,0,1,1,0,1), 6, 4,
-#'               dimnames=list(paste0("g",1:6), tree$tip.label))
-#' pc <- phylo_community(com, tree)
-#' pd(pc)
-#' pbc <- phylobeta_core(pc)
-#' library(betapart)
-#' phylo.beta.multi(pbc)
-#' phylo.beta.pair(pbc)
-#'
-#' @rdname phylo_community
-#' @export
+
 phylo_community <- function(x, phy){
   el <- numeric(max(phy$edge))
   el[phy$edge[,2]] <- phy$edge.length
@@ -90,27 +62,42 @@ phylo_community <- function(x, phy){
 }
 
 
-#' @rdname phylo_community
-#' @export
-pd <- function(x, phy=NULL){
-  if(!is.null(phy)){
-    el <- numeric(max(phy$edge))
-    el[phy$edge[,2]] <- phy$edge.length
-  }
-  else el <- attr(x, "edge.length")
-  if(is.list(x)) res <- vapply(x, function(x, el)sum(el[x]), 0, el)
-  else res <- sum(el[x]) #fun(x, tree)
-  res
-}
-
-
-#' @rdname phylo_community
+#' Phylogenetic beta diversity
+#'
+#' \code{beta_sparse_core} and \code{phylobeta_core} computes efficiently for
+#' large community matrices and trees the nesseary quantitities used by the
+#' betapart package to compute pairwise and multiple-site phylogenetic
+#' dissimilarities.
+#'
+#' @aliases phylo_betapart_core beta_sparse_core
+#' @param x an object of class Matrix or matrix
+#' @param phy a phylogenetic tree (object of class phylo)
+#'
+#' @keywords cluster
+#' @seealso read.community pd
+#' @examples
+#' library(ape)
+#' tree <- read.tree(text ="((t1:1,t2:1)N2:1,(t3:1,t4:1)N3:1)N1;")
+#' com <- matrix(c(1,0,1,1,0,0,
+#'                 1,0,0,1,1,0,
+#'                 1,1,1,1,1,1,
+#'                 0,0,1,1,0,1), 6, 4,
+#'               dimnames=list(paste0("g",1:6), tree$tip.label))
+#' pbc <- phylobeta_core(com, tree)
+#' library(betapart)
+#' phylo.beta.multi(pbc)
+#' phylo.beta.pair(pbc)
+#'
+#' @rdname phylobeta_core
 #' @importFrom fastmatch fmatch
 #' @export
-phylobeta_core <- function(x){
+phylobeta_core <- function(x, phy){
+  x <- phylo_community(x, phy)
   l <- length(x)
-  pd_tmp <- pd(x)
   el <- attr(x, "edge.length")
+  pd_tmp <- vapply(x, function(x, el)sum(el[x]), 0, el)
+#  pd_tmp <- pd(x)
+
   Labels <- names(x)
   class(x) <- NULL
   SHARED <- vector("numeric", l*(l-1)/2)
@@ -146,6 +133,46 @@ phylobeta_core <- function(x){
   res
 }
 
+
+
+phylobeta_core_old <- function(x){
+  l <- length(x)
+  pd_tmp <- pd(x)
+  el <- attr(x, "edge.length")
+  Labels <- names(x)
+  class(x) <- NULL
+  SHARED <- vector("numeric", l*(l-1)/2)
+  B <- vector("numeric", l*(l-1)/2)
+  C <- vector("numeric", l*(l-1)/2)
+
+  k <- 1
+  for(i in 1:(l-1)){
+    xi <- x[[i]]
+    for(j in (i+1):l){
+      #   sum(el[fast_intersect(x[[i]], x[[j]])])
+      SHARED[k] <- sum(el[xi[fmatch(x[[j]], xi, 0L)] ])
+      B[k] <- pd_tmp[i] - SHARED[k]
+      C[k] <- pd_tmp[j] - SHARED[k]
+      k <- k+1
+    }
+  }
+
+  sum.not.shared <- B+C
+  max.not.shared <- pmax(B,C)
+  min.not.shared <- pmin(B,C)
+
+  at <- structure(list(Labels=Labels, Size = l, class = "dist", Diag = FALSE,
+                       Upper = FALSE), .Names = c("Labels", "Size", "class", "Diag", "Upper"))
+  attributes(SHARED) <- at
+  attributes(sum.not.shared) <- at
+  attributes(max.not.shared) <- at
+  attributes(min.not.shared) <- at
+  res <- list(sumSi=sum(pd_tmp), St=sum(el), shared=SHARED,
+              sum.not.shared = sum.not.shared,
+              max.not.shared=max.not.shared, min.not.shared=min.not.shared)
+  class(res) <- "phylo.betapart"
+  res
+}
 
 #' Match taxa and in phylogeny and community matrix
 #'
@@ -184,9 +211,10 @@ match_phylo_comm <- function (phy, comm)
 }
 
 
-#' @rdname phylo_community
+#' @rdname phylobeta_core
 #' @importFrom Matrix Matrix tcrossprod colSums
 #' @export
+## non_phylo version
 beta_sparse_core <- function (x) {
   if (!inherits(x, "Matrix")) x <- Matrix(x)
 

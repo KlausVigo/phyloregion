@@ -7,6 +7,7 @@
 #'
 #' @param species A vector or matrix containing a species list
 #' @param tree a phylogenetic tree (object of class phylo)
+#' @seealso \code{\link[phangorn]{add.tips}}
 #' @keywords cluster
 #' @importFrom ape drop.tip stripLabel label2table getMRCA
 #' @importFrom parallel mclapply
@@ -22,7 +23,7 @@ phylo_builder <- function (species, tree)
 {
   taxonomy <- c("species", "genus", "family")
 #  ,"suborder", "order", "class", "phylum", "kingdom")
-# brranching phylomatic_names
+# branching phylomatic_names
   if(is.matrix(species) | is.data.frame(species)) species_list <- species
 
   if(is.factor(species)) species <- as.character(species)
